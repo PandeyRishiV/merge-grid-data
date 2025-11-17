@@ -1,0 +1,16 @@
+{
+  "name": "merge-grid-data",
+  "workspaces": [
+    "backend",
+    "client"
+  ],
+  "scripts": {
+    "setup": "npm install",
+    "start:backend": "cd backend && npm run dev",
+    "start:frontend": "cd client && npm run dev",
+    "start": "concurrently \"npm --workspace=backend run dev\" \"npm --workspace=client run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

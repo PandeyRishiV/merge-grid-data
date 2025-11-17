@@ -8,137 +8,17 @@ const MONTHS = [
 type Month = typeof MONTHS[number];
 
 
-interface GridRow {
-  id: string;
-  name: string;
-  values: Record<Month, number>;
-}
-const GridAData = [
-  {
-    id: "row1",
-    name: "Product A",
-    values: {
-      Jan: 100,
-      Feb: 110,
-      Mar: 120,
-      Apr: 130,
-      May: 140,
-      Jun: 150,
-      Jul: 160,
-      Aug: 170,
-      Sep: 180,
-      Oct: 190,
-      Nov: 200,
-      Dec: 210,
-    },
-  },
-  {
-    id: "row2",
-    name: "Product B",
-    values: {
-      Jan: 50,
-      Feb: 55,
-      Mar: 60,
-      Apr: 65,
-      May: 70,
-      Jun: 75,
-      Jul: 80,
-      Aug: 85,
-      Sep: 90,
-      Oct: 95,
-      Nov: 100,
-      Dec: 105,
-    },
-  },
-  {
-    id: "row3",
-    name: "Product C",
-    values: {
-      Jan: 20,
-      Feb: 20,
-      Mar: 30,
-      Apr: 30,
-      May: 40,
-      Jun: 40,
-      Jul: 50,
-      Aug: 50,
-      Sep: 60,
-      Oct: 60,
-      Nov: 70,
-      Dec: 70,
-    },
-  },
-];
 
-const GridBData = [
-  {
-    id: "row1",
-    name: "Product A",
-    values: {
-      Jan: 100,
-      Feb: 110,
-      Mar: 120,
-      Apr: 130,
-      May: 140,
-      Jun: 150,
-      Jul: 160,
-      Aug: 170,
-      Sep: 180,
-      Oct: 190,
-      Nov: 200,
-      Dec: 210,
-    },
-  },
-  {
-    id: "row2",
-    name: "Product B",
-    values: {
-      Jan: 50,
-      Feb: 55,
-      Mar: 60,
-      Apr: 65,
-      May: 70,
-      Jun: 75,
-      Jul: 80,
-      Aug: 85,
-      Sep: 90,
-      Oct: 95,
-      Nov: 100,
-      Dec: 105,
-    },
-  },
-  {
-    id: "row3",
-    name: "Product C",
-    values: {
-      Jan: 25,
-      Feb: 25,
-      Mar: 35,
-      Apr: 35,
-      May: 45,
-      Jun: 45,
-      Jul: 55,
-      Aug: 55,
-      Sep: 65,
-      Oct: 65,
-      Nov: 75,
-      Dec: 75,
-    },
-  },
-];
 
 
 export default function App() {
-
-
-
 
   return (
     <div className="flex justify-center p-4 md:p-8 font-sans bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Grid Merge Tool</h1>
 
 
-      <div className="">
+      {/* <div className="">
         <GridTable
           title="Grid A (Source)"
           gridData={GridAData}
@@ -150,26 +30,31 @@ export default function App() {
           title="Grid B (Target)"
           gridData={GridBData}
           isEditable={false}
-        />
-      </div>
-    </div>
+        /> */}
+
+    </div >
   );
 }
 
 
 interface GridTableProps {
   title: string;
-  gridData: GridRow[];
+  gridData: Array<{
+    id: string;
+    name: string;
+    values: Record<Month, number>;
+  }>;
   isEditable: boolean;
   onCellChange?: (rowId: string, month: Month, value: string) => void;
 }
 
 function GridTable({
   title,
-  gridData,
   isEditable,
+  gridData,
   onCellChange,
 }: GridTableProps) {
+
 
 
 
