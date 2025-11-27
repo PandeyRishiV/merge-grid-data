@@ -1,4 +1,3 @@
-import React, { useState, useMemo } from 'react';
 
 const MONTHS = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -108,10 +107,10 @@ function GridTable({
                       </td>
                     );
                   })}
-                  {isEditable && onMerge && onResetRow && (
+                  {isEditable && (
                     <td className="px-3 py-2 whitespace-nowrap sticky right-0 bg-white z-10 w-12">
                       <button
-                        onClick={() => onMerge(row.id)}
+                        onClick={() => { }}
                         className="mr-2 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
                       >
                         Merge
