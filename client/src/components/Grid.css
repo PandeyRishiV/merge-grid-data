@@ -1,0 +1,27 @@
+.grid {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.grid__th,
+.grid__td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.grid__th {
+    background: #f6f6f6;
+}
+
+.grid__th--name,
+.grid__td--name {
+    width: 180px;
+}
+
+.grid__input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px;
+}
