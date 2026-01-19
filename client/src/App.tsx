@@ -1,14 +1,36 @@
 
-const MONTHS = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+export const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ] as const;
 
-type Month = typeof MONTHS[number];
+export type Month = (typeof MONTHS)[number];
 
+export type Row = {
+  id: string;
+  name: string;
+  values: Record<Month, number>;
+};
 
+const API_BASE = "http://localhost:3000";
 
-
+function cloneRow(row: Row): Row {
+  return {
+    id: row.id,
+    name: row.name,
+    values: { ...row.values },
+  };
+}
 
 export default function App() {
 
