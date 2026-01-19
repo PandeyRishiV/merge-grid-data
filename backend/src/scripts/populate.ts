@@ -77,14 +77,7 @@ const populate = () => {
             for (const val of values) insertRowValue.run(val.id, JSON.stringify(val.values));
         });
 
-        const initRowRelations = db.transaction((rows: Row[], values: RowValue[]) => {
-             for (let i = 0; i < rows.length; i++) {
-                 const val = values[i];
-                 if (val) {
-                     insertRowRelation.run(rows[i].id, val.id);
-                 }
-             }
-        });
+            insertRowRelation.run(rows[i]?.id, val.id);
 
         initRows(Rows);
         initRowValues(rowValues);
