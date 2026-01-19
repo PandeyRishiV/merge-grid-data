@@ -33,6 +33,29 @@ app.get("/row-relations", (req, res) => {
   res.json(rowRelations);
 });
 
+app.get("/row/:id", (req, res) => {
+  const { id } = req.params;
+
+  const query = `SELECT
+   r.id as row_id,
+   r.name as row_name,
+   rv."values" as values_json
+   FROM rows r
+   JOIN row_relations rr ON rr.row_id = r.id
+   JOIN row_values rv ON rv.id = rr.value_id
+   WHERE r.id = ?
+   LIMIT 1`;
+
+  const result: any = db.prepare(query).get(id);
+
+  if (!result) {
+    return res.status(404).json({ error: "Row not found" });
+  }
+
+  const values = JSON.parse(result.values_json);
+  return res.json({ id: result.row_id, name: result.row_name, values });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
