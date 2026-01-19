@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { Grid } from "./components/Grid";
 
 export const MONTHS = [
   "Jan",
@@ -124,7 +126,18 @@ export default function App() {
   if (!gridA || !gridB) {
     return null;
   }
-    </div>
 
+  return (
+    <div className="page">
+      <section className="section">
+        <h2 className="title">Grid A (Source)</h2>
+        <Grid row={gridA} editable onEdit={updateGridACell}></Grid>
+      </section>
+
+      <section className="section">
+        <h2 className="title">Grid B (Target)</h2>
+        <Grid row={gridB}></Grid>
+      </section>
+    </div>
   );
 }
