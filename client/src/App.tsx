@@ -33,50 +33,57 @@ function cloneRow(row: Row): Row {
 }
 
 export default function App() {
+  const [gridA, setGridA] = useState<Row | null>(null);
+  const [gridB, setGridB] = useState<Row | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  return (
-    <div className="flex justify-center p-4 md:p-8 font-sans bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Grid Merge Tool</h1>
+  useEffect(() => {
+    let cancelled = false;
 
+    async function load() {
+      try {
+        setIsLoading(true);
+        setError(null);
 
-      {/* <div className="">
-        <GridTable
-          title="Grid A (Source)"
-          gridData={GridAData}
-          isEditable={true}
-          onCellChange={() => { }}
-        />
+        const res = await fetch(`${API_BASE}/row/row1`);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch Grid`);
+        }
 
-        <GridTable
-          title="Grid B (Target)"
-          gridData={GridBData}
-          isEditable={false}
-        /> */}
+        const data: Row = (await res.json()) as Row;
 
-    </div >
-  );
-}
+        if (cancelled) return;
 
+        const valueCheck = Object.fromEntries(
+          MONTHS.map((month) => [month, Number(data.values?.[month] ?? 0)]),
+        ) as Record<Month, number>;
 
-interface GridTableProps {
-  title: string;
-  gridData: Array<{
-    id: string;
-    name: string;
-    values: Record<Month, number>;
-  }>;
-  isEditable: boolean;
-  onCellChange?: (rowId: string, month: Month, value: string) => void;
-}
+        const row: Row = {
+          id: data.id,
+          name: data.name,
+          values: valueCheck,
+        };
 
-function GridTable({
-  title,
-  isEditable,
-  gridData,
-  onCellChange,
-}: GridTableProps) {
+        setGridA(row);
+        setGridB(cloneRow(row));
+      } catch (err) {
+        if (cancelled) return;
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred",
+        );
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
 
-
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
 
   return (
