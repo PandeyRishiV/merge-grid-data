@@ -1,6 +1,6 @@
 .page{
   padding: 16px;
-  display: grid;
+  display: flexbox;
   gap: 24px;
 }
 
