@@ -11,14 +11,30 @@
 }
 
 .grid-input {
+    width: 100%;
+    max-width: 120px;
+    padding: 6px 10px;
     text-align: center;
-    min-width: 0;
+
+    font-size: 14px;
+    border-radius: 6px;
+
+    border: 1px solid;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
-.grid-total-row {
-    font-weight: 600;
+.grid-input:hover {
+    border-color: #b5b5b5;
 }
 
-.grid-total-cell {
-    background: #fafafa;
+.grid-input:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+    background: #797979;
+}
+
+.grid-input[readonly] {
+    background: #2a2a2a;
+    color: #888;
 }
