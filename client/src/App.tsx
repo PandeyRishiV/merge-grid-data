@@ -118,25 +118,9 @@ export default function App() {
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen font-sans bg-gray-50">
-        <h1 className="text-2xl font-bold text-gray-800">Loading...</h1>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-screen font-sans bg-gray-50">
-        <h1 className="text-2xl font-bold text-red-600">Error: {error}</h1>
-      </div>
-    );
-  }
-
-  if (!gridA || !gridB) {
-    return null;
-  }
+  if (isLoading) return <div className="page">Loading…</div>;
+  if (error) return <div className="page">Error: {error}</div>;
+  if (!gridA || !gridB) return null;
 
   return (
     <div className="page">
