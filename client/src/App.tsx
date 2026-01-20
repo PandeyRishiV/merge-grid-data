@@ -147,15 +147,19 @@ export default function App() {
 
   return (
     <div className="page">
-      <section className="section">
-        <h2 className="title">Grid A (Source)</h2>
-        <Grid row={gridA} editable onEdit={updateGridACell} />
-      </section>
-
-      <section className="section">
-        <h2 className="title">Grid B (Target)</h2>
-        <Grid row={gridB} />
-      </section>
+      <div className="grids-container">
+        <section className="section">
+          <h2 className="title">Grid A</h2>
+          <hr />
+          <Grid row={gridA} editable onEdit={updateGridACell} />
+        </section>
+        <div className="grids-divider" />
+        <section className="section">
+          <h2 className="title">Grid B</h2>
+          <hr />
+          <Grid row={gridB} />
+        </section>
+      </div>
 
       <ChangesGrid changes={changesToShow} onMerge={mergeMonth} />
     </div>
