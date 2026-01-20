@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Grid } from "./components/Grid";
+import "./App.css";
+import ChangesGrid, { type ChangeRow } from "./components/ChangesGrid";
+import Grid from "./components/Grid";
 
 export const MONTHS = [
   "Jan",
@@ -26,17 +28,14 @@ export type Row = {
 
 const API_BASE = "http://localhost:3000";
 
-function cloneRow(row: Row): Row {
-  return {
-    id: row.id,
-    name: row.name,
-    values: { ...row.values },
-  };
+export function cloneRow(row: Row): Row {
+  return { id: row.id, name: row.name, values: { ...row.values } };
 }
 
 export default function App() {
   const [gridA, setGridA] = useState<Row | null>(null);
   const [gridB, setGridB] = useState<Row | null>(null);
+  const [appliedChanges, setAppliedChanges] = useState<ChangeRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -97,47 +96,68 @@ export default function App() {
     });
   }
 
-  function updateGridBCell(month: Month, value: number) {
-    setGridB((prev) => {
-      if (!prev) return prev;
+  function mergeMonth(month: Month) {
+    if (!gridA || !gridB) return;
 
-      const values = { ...prev.values };
-      values[month] = Number(value);
-      return { ...prev, values };
+    const from = gridB.values[month] ?? 0;
+    const to = gridA.values[month] ?? 0;
+
+    // update Grid B
+    setGridB({
+      ...gridB,
+      values: {
+        ...gridB.values,
+        [month]: to,
+      },
     });
+
+    // log only if Grid B actually changed
+    if (from !== to) {
+      setAppliedChanges((prev) => [
+        { month, from, to, type: "applied" },
+        ...prev,
+      ]);
+    }
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen font-sans bg-gray-50">
-        <h1 className="text-2xl font-bold text-gray-800">Loading...</h1>
-      </div>
-    );
-  }
+  if (isLoading) return <div className="page">Loading…</div>;
+  if (error) return <div className="page">Error: {error}</div>;
+  if (!gridA || !gridB) return null;
 
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-screen font-sans bg-gray-50">
-        <h1 className="text-2xl font-bold text-red-600">Error: {error}</h1>
-      </div>
-    );
-  }
+  const pendingChanges: ChangeRow[] = MONTHS.flatMap((m) => {
+    const a = gridA.values[m] ?? 0;
+    const b = gridB.values[m] ?? 0;
+    return a !== b
+      ? [{ month: m, from: b, to: a, type: "pending" as const }]
+      : [];
+  });
 
-  if (!gridA || !gridB) {
-    return null;
-  }
+  const monthIndex = (m: Month) => MONTHS.indexOf(m);
+
+  const changesToShow: ChangeRow[] = [
+    ...pendingChanges,
+    ...appliedChanges,
+  ].sort((a, b) => {
+    const mi = monthIndex(a.month) - monthIndex(b.month);
+    if (mi !== 0) return mi;
+
+    if (a.type === b.type) return 0;
+    return a.type === "pending" ? -1 : 1;
+  });
 
   return (
     <div className="page">
       <section className="section">
         <h2 className="title">Grid A (Source)</h2>
-        <Grid row={gridA} editable onEdit={updateGridACell}></Grid>
+        <Grid row={gridA} editable onEdit={updateGridACell} />
       </section>
 
       <section className="section">
         <h2 className="title">Grid B (Target)</h2>
-        <Grid row={gridB}></Grid>
+        <Grid row={gridB} />
       </section>
+
+      <ChangesGrid changes={changesToShow} onMerge={mergeMonth} />
     </div>
   );
 }

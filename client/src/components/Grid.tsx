@@ -1,6 +1,6 @@
 import { MONTHS, type Month, type Row } from "../App";
 
-export function Grid({
+export default function Grid({
   row,
   editable = false,
   onEdit,
@@ -13,17 +13,17 @@ export function Grid({
     <table className="grid">
       <thead>
         <tr>
-          <th className="grid-th grid-th--name">Name</th>
+          <th className="grid-th grid-th-name">Name</th>
           {MONTHS.map((month) => (
-            <th key={month} className="grid-th grid-th--month">
-              {month}
+            <th key={month} className="grid-th">
+              <span className="grid-month-label">{month}</span>
             </th>
           ))}
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td className="grid-td grid-td--name">{row.name}</td>
+          <td className="grid-td grid-td-name">{row.name}</td>
           {MONTHS.map((m) => {
             const val = row.values[m] ?? 0;
 
