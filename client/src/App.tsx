@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Grid } from "./components/Grid";
+import "./App.css";
+import Grid from "./components/Grid";
 
 export const MONTHS = [
   "Jan",
@@ -26,12 +27,8 @@ export type Row = {
 
 const API_BASE = "http://localhost:3000";
 
-function cloneRow(row: Row): Row {
-  return {
-    id: row.id,
-    name: row.name,
-    values: { ...row.values },
-  };
+export function cloneRow(row: Row): Row {
+  return { id: row.id, name: row.name, values: { ...row.values } };
 }
 
 export default function App() {
@@ -97,14 +94,28 @@ export default function App() {
     });
   }
 
-  function updateGridBCell(month: Month, value: number) {
-    setGridB((prev) => {
-      if (!prev) return prev;
+  function mergeMonth(month: Month) {
+    if (!gridA || !gridB) return;
 
-      const values = { ...prev.values };
-      values[month] = Number(value);
-      return { ...prev, values };
+    const from = gridB.values[month] ?? 0;
+    const to = gridA.values[month] ?? 0;
+
+    // update Grid B
+    setGridB({
+      ...gridB,
+      values: {
+        ...gridB.values,
+        [month]: to,
+      },
     });
+
+    // log only if Grid B actually changed
+    if (from !== to) {
+      setAppliedChanges((prev) => [
+        { month, from, to, type: "applied" },
+        ...prev,
+      ]);
+    }
   }
 
   if (isLoading) {
