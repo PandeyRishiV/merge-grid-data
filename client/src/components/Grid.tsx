@@ -13,9 +13,9 @@ export function Grid({
     <table className="grid">
       <thead>
         <tr>
-          <th className="grid__th grid__th--name">Name</th>
+          <th className="grid-th grid-th--name">Name</th>
           {MONTHS.map((month) => (
-            <th key={month} className="grid__th grid__th--month">
+            <th key={month} className="grid-th grid-th--month">
               {month}
             </th>
           ))}
@@ -23,14 +23,14 @@ export function Grid({
       </thead>
       <tbody>
         <tr>
-          <td className="grid__td grid__td--name">{row.name}</td>
+          <td className="grid-td grid-td--name">{row.name}</td>
           {MONTHS.map((m) => {
             const val = row.values[m] ?? 0;
 
             return (
-              <td key={m} className="grid__td">
+              <td key={m} className="grid-td">
                 <input
-                  className="grid__input"
+                  className="grid-input"
                   type="number"
                   value={val}
                   onChange={(e) => {

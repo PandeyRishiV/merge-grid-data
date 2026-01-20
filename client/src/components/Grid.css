@@ -4,23 +4,23 @@
     table-layout: fixed;
 }
 
-.grid__th,
-.grid__td {
+.grid-th,
+.grid-td {
     border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
 }
 
-.grid__th {
+.grid-th {
     background: #f6f6f6;
 }
 
-.grid__th--name,
-.grid__td--name {
+.grid-th--name,
+.grid-td--name {
     width: 180px;
 }
 
-.grid__input {
+.grid-input {
     width: 100%;
     box-sizing: border-box;
     padding: 6px;
