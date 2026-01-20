@@ -1,10 +1,19 @@
 ## Part 1
 ### 1. Backend: Expose Grid Data
 - In `backend/app.ts`, create API endpoints that return the required data to render grids on the client.
+- Grids expect the following interface: 
+```ts
+gridData: Array<{
+    id: string;
+    name: string;
+    values: Record<Month, number>;
+  }>;
+```
 
 ### 2. Frontend: Fetch Data from the Backend
 - In `client/src/App.tsx`, fetch the grid data from the API endpoints created in the backend.
 - Use the fetched data to populate Grid A and Grid B.
+
 
 ### 3. Implement Cell Editing
 - In `client/src/App.tsx`, implement functionality to edit cells within Grid A.
