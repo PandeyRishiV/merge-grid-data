@@ -21,18 +21,27 @@
 
 .grid-th-name,
 .grid-td-name {
-    grid-column: 1 / -1;
     background: #f6f6f6;
+    padding: 2px;
     font-weight: 600;
 }
 
 .grid-td {
     display: flex;
     flex-direction: column;
+    padding: 2px;
     gap: 6px;
 }
 
 .grid-input {
     text-align: center;
     min-width: 0;
+}
+
+.grid-total-row {
+    font-weight: 600;
+}
+
+.grid-total-cell {
+    background: #fafafa;
 }
