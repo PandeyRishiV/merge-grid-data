@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import ChangesGrid, { type ChangeRow } from "./components/ChangesGrid";
 import Grid from "./components/Grid";
 
 export const MONTHS = [
@@ -34,6 +35,7 @@ export function cloneRow(row: Row): Row {
 export default function App() {
   const [gridA, setGridA] = useState<Row | null>(null);
   const [gridB, setGridB] = useState<Row | null>(null);
+  const [appliedChanges, setAppliedChanges] = useState<ChangeRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -121,6 +123,27 @@ export default function App() {
   if (isLoading) return <div className="page">Loading…</div>;
   if (error) return <div className="page">Error: {error}</div>;
   if (!gridA || !gridB) return null;
+
+  const pendingChanges: ChangeRow[] = MONTHS.flatMap((m) => {
+    const a = gridA.values[m] ?? 0;
+    const b = gridB.values[m] ?? 0;
+    return a !== b
+      ? [{ month: m, from: b, to: a, type: "pending" as const }]
+      : [];
+  });
+
+  const monthIndex = (m: Month) => MONTHS.indexOf(m);
+
+  const changesToShow: ChangeRow[] = [
+    ...pendingChanges,
+    ...appliedChanges,
+  ].sort((a, b) => {
+    const mi = monthIndex(a.month) - monthIndex(b.month);
+    if (mi !== 0) return mi;
+
+    if (a.type === b.type) return 0;
+    return a.type === "pending" ? -1 : 1;
+  });
 
   return (
     <div className="page">
