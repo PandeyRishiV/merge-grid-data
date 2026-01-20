@@ -1,4 +1,5 @@
 import { MONTHS, type Month, type Row } from "../App";
+import "./Grid.css";
 
 export default function Grid({
   row,
@@ -20,36 +21,25 @@ export default function Grid({
     <table className="grid">
       <thead>
         <tr>
-          <th className="grid-th grid-th-name">Name</th>
-          {MONTHS.map((month) => (
-            <th key={month} className="grid-th">
-              <span>{month}</span>
-            </th>
-          ))}
+          <th colSpan={3}>
+            <h3>{row.name}</h3>
+          </th>
+        </tr>
+        <tr>
+          <th className="grid-th">Month</th>
+          <th className="grid-th">Value</th>
+          <th className="grid-th">Total</th>
         </tr>
       </thead>
+
       <tbody>
-        <tr className="grid-total-row">
-          <td className="grid-td grid-td-name">Total</td>
-          {MONTHS.map((m) => (
-            <td key={m} className="grid-td grid-total-cell">
-              <input
-                className="grid-input"
-                type="number"
-                value={totals[m]}
-                readOnly
-              />
-            </td>
-          ))}
-        </tr>
+        {MONTHS.map((m) => {
+          const val = row.values[m] ?? 0;
 
-        <tr>
-          <td className="grid-td grid-td-name">{row.name}</td>
-          {MONTHS.map((m) => {
-            const val = row.values[m] ?? 0;
-
-            return (
-              <td key={m} className="grid-td">
+          return (
+            <tr key={m}>
+              <td className="grid-td">{m}</td>
+              <td className="grid-td">
                 <input
                   className="grid-input"
                   type="number"
@@ -61,9 +51,10 @@ export default function Grid({
                   readOnly={!editable}
                 />
               </td>
-            );
-          })}
-        </tr>
+              <td className="grid-td">{totals[m]}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
