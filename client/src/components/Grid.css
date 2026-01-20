@@ -1,36 +1,13 @@
 .grid {
-    display: flexbox;
-    flex-wrap: wrap;
-    gap: 8px;
-    width: 100%;
-    max-width: 100%;
-}
-/* Header and body rows behave the same */
-.grid thead,
-.grid tbody,
-.grid tr {
-    display: contents;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .grid-th,
 .grid-td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    box-sizing: border-box;
-}
-
-.grid-th-name,
-.grid-td-name {
-    background: #f6f6f6;
-    padding: 2px;
-    font-weight: 600;
-}
-
-.grid-td {
-    display: flex;
-    flex-direction: column;
-    padding: 2px;
-    gap: 6px;
+  padding: 4px;
+  text-align: center;
 }
 
 .grid-input {
