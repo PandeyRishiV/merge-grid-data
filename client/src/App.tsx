@@ -28,6 +28,11 @@ export type Row = {
 
 const API_BASE = "http://localhost:3000";
 
+/**
+ * Clone a Row object
+ * @param row
+ * @returns A deep copy of the Row object
+ */
 export function cloneRow(row: Row): Row {
   return { id: row.id, name: row.name, values: { ...row.values } };
 }
@@ -86,6 +91,11 @@ export default function App() {
     };
   }, []);
 
+  /**
+   * Update a cell in Grid A
+   * @param month
+   * @param value
+   */
   function updateGridACell(month: Month, value: number) {
     setGridA((prev) => {
       if (!prev) return prev;
@@ -96,13 +106,17 @@ export default function App() {
     });
   }
 
+  /**
+   * Merge a month from Grid A to Grid B
+   * @param month
+   * @returns none
+   */
   function mergeMonth(month: Month) {
     if (!gridA || !gridB) return;
 
     const from = gridB.values[month] ?? 0;
     const to = gridA.values[month] ?? 0;
 
-    // update Grid B
     setGridB({
       ...gridB,
       values: {
@@ -111,7 +125,6 @@ export default function App() {
       },
     });
 
-    // log only if Grid B actually changed
     if (from !== to) {
       setAppliedChanges((prev) => [
         { month, from, to, type: "applied" },
