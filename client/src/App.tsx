@@ -128,16 +128,19 @@ export default function App() {
 
   const monthIndex = (m: Month) => MONTHS.indexOf(m);
 
-  const changesToShow: ChangeRow[] = [
-    ...pendingChanges,
-    ...appliedChanges,
-  ].sort((a, b) => {
-    const mi = monthIndex(a.month) - monthIndex(b.month);
-    if (mi !== 0) return mi;
+  const changesToShow: ChangeRow[] = useMemo(() => {
+    return [...pendingChanges, ...appliedChanges].sort((a, b) => {
+      const mi = monthIndex(a.month) - monthIndex(b.month);
+      if (mi !== 0) return mi;
 
-    if (a.type === b.type) return 0;
-    return a.type === "pending" ? -1 : 1;
-  });
+      if (a.type === b.type) return 0;
+      return a.type === "pending" ? -1 : 1;
+    });
+  }, [pendingChanges, appliedChanges]);
+
+  if (isLoading) return <div className="page">Loading…</div>;
+  if (error) return <div className="page">Error: {error}</div>;
+  if (!gridA || !gridB) return null;
 
   return (
     <div className="page">
