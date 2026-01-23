@@ -47,35 +47,31 @@ describe("Grid", () => {
     expect(inputs[11]).toHaveValue(120);
   });
 
-//     it("is read-only by default", async () => {
-//         const user = userEvent.setup();
-//         const row = makeRow();
-//         const onEdit = vi.fn();
+  it("is disabled by default", async () => {
+    const row = makeRow();
+    const onEdit = vi.fn();
 
-//         render(<Grid row={row} onEdit={onEdit} />);
+    render(<Grid row={row} onEdit={onEdit} />);
 
-//         const inputs = screen.getAllByRole("spinbutton");
-//         await user.type(inputs[0], "999");
+    const inputs = screen.getAllByRole("spinbutton"); //ARIA role
 
-//         expect(onEdit).not.toHaveBeenCalled();
-//         expect(inputs[0]).toHaveAttribute("readonly");
-//     });
+    expect(onEdit).not.toHaveBeenCalled();
+    expect(inputs[0]).toBeDisabled();
+  });
 
-//     it("calls onEdit when editable", async () => {
-//         const user = userEvent.setup();
-//         const row = makeRow();
-//         const onEdit = vi.fn();
+  it("calls onEdit when not disabled", async () => {
+    const user = userEvent.setup();
+    const row = makeRow();
+    const onEdit = vi.fn();
 
-//         render(<Grid row={row} editable onEdit={onEdit} />);
+    render(<Grid row={row} editable={true} onEdit={onEdit} />);
+    const inputs = screen.getAllByRole("spinbutton"); //ARIA role
+    fireEvent.change(inputs[0], { target: { value: "123" } });
 
-//         const inputs = screen.getAllByRole("spinbutton");
-//         await user.clear(inputs[0]);
-//         await user.type(inputs[0], "123");
-
-//         // onChange fires multiple times while typing; assert last call
-//         const lastCall = onEdit.mock.calls.at(-1);
-//         expect(lastCall).toBeTruthy();
-//         expect(lastCall?.[0]).toBe("Jan");
-//         expect(lastCall?.[1]).toBe(123);
-//     });
-// });
+    expect(inputs[0]).not.toBeDisabled();
+    const lastCall = onEdit.mock.calls.at(-1); //Since each character triggers a call
+    expect(lastCall).toBeTruthy();
+    expect(lastCall?.[0]).toBe("Jan");
+    expect(lastCall?.[1]).toBe(123);
+  });
+});
