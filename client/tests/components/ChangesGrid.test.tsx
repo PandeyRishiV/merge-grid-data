@@ -43,4 +43,18 @@ describe("ChangesGrid", () => {
     expect(screen.getByRole("button", { name: "Merge" })).toBeInTheDocument();
     expect(screen.getByText("Applied")).toBeInTheDocument();
   });
+
+  it("clicking Merge calls onMerge with the correct month", () => {
+    const onMerge = vi.fn();
+    const changes: ChangeRow[] = [
+      { month: "Jan", from: 10, to: 20, type: "pending" },
+    ];
+
+    render(<ChangesGrid changes={changes} onMerge={onMerge} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Merge" }));
+
+    expect(onMerge).toHaveBeenCalledTimes(1);
+    expect(onMerge).toHaveBeenCalledWith("Jan" as Month);
+  });
 });
