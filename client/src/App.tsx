@@ -29,7 +29,7 @@ export type Row = {
 const API_BASE = "http://localhost:3000";
 
 export function cloneRow(row: Row): Row {
-  return { id: row.id, name: row.name, values: { ...row.values } };
+  return structuredClone(row);
 }
 
 export default function App() {
@@ -40,8 +40,6 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
-
     async function load() {
       try {
         setIsLoading(true);
@@ -52,9 +50,7 @@ export default function App() {
           throw new Error(`Failed to fetch Grid`);
         }
 
-        const data: Row = (await res.json()) as Row;
-
-        if (cancelled) return;
+        const data: Row = await res.json();
 
         const valueCheck = Object.fromEntries(
           MONTHS.map((month) => [month, Number(data.values?.[month] ?? 0)]),
@@ -69,21 +65,15 @@ export default function App() {
         setGridA(row);
         setGridB(cloneRow(row));
       } catch (err) {
-        if (cancelled) return;
         setError(
           err instanceof Error ? err.message : "An unknown error occurred",
         );
       } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       }
     }
 
     load();
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   function updateGridACell(month: Month, value: number) {
