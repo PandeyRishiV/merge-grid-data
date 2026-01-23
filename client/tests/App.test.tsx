@@ -96,3 +96,34 @@ describe("App", () => {
     expect(await screen.findByText("Changes")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Merge" })).toBeInTheDocument();
   });
+
+  it("merge updates Grid B", async () => {
+    mockFetch(makeRow());
+
+    render(<App />);
+
+    await screen.findByText("Grid A");
+
+    const getEnabledInputs = () =>
+      screen
+        .getAllByRole("spinbutton")
+        .filter((el) => !(el as HTMLInputElement).disabled);
+
+    const getDisabledInputs = () =>
+      screen
+        .getAllByRole("spinbutton")
+        .filter((el) => (el as HTMLInputElement).disabled);
+
+    fireEvent.change(getEnabledInputs()[0], { target: { value: "123" } });
+
+    // merge pending change
+    fireEvent.click(await screen.findByRole("button", { name: "Merge" }));
+
+    // Jan in Grid B should be 12
+    await waitFor(() => {
+      expect(getDisabledInputs()[0]).toHaveValue(123);
+    });
+
+    expect(screen.getByText("Applied")).toBeInTheDocument();
+  });
+});
