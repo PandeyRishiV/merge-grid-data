@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./App.css";
 import ChangesGrid, { type ChangeRow } from "./components/ChangesGrid";
 import Grid from "./components/Grid";
