@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 
 import db from "./db.js";
+import type { Row } from "./Models/Row.js";
 
 const app = express();
 const port: number = 3000;
@@ -33,6 +34,11 @@ app.get("/row-relations", (req, res) => {
   res.json(rowRelations);
 });
 
+/** Fetch a specific row with its values
+ * Returns 404 if not found
+ * @param id - The ID of the row to fetch
+ * @return {Row} The row object with its values
+ */
 app.get("/row/:id", (req, res) => {
   const { id } = req.params;
 

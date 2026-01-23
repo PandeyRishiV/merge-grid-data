@@ -28,6 +28,11 @@ export type Row = {
 
 const API_BASE = "http://localhost:3000";
 
+/**
+ * Clone a Row object
+ * @param row
+ * @returns A deep copy of the Row object
+ */
 export function cloneRow(row: Row): Row {
   return structuredClone(row);
 }
@@ -76,6 +81,11 @@ export default function App() {
     load();
   }, []);
 
+  /**
+   * Update a cell in Grid A
+   * @param month
+   * @param value
+   */
   const updateGridACell = useCallback(function updateGridACell(
     month: Month,
     value: number,
@@ -89,6 +99,11 @@ export default function App() {
     });
   }, []);
 
+  /**
+   * Merge a month from Grid A to Grid B
+   * @param month
+   * @returns none
+   */
   const mergeMonth = useCallback(
     function mergeMonth(month: Month) {
       if (!gridA || !gridB) return;
