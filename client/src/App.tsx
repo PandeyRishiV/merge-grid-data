@@ -89,33 +89,32 @@ export default function App() {
     });
   }, []);
 
-  function mergeMonth(month: Month) {
-    if (!gridA || !gridB) return;
+  const mergeMonth = useCallback(
+    function mergeMonth(month: Month) {
+      if (!gridA || !gridB) return;
 
-    const from = gridB.values[month] ?? 0;
-    const to = gridA.values[month] ?? 0;
+      const from = gridB.values[month] ?? 0;
+      const to = gridA.values[month] ?? 0;
 
-    // update Grid B
-    setGridB({
-      ...gridB,
-      values: {
-        ...gridB.values,
-        [month]: to,
-      },
-    });
+      // update Grid B
+      setGridB({
+        ...gridB,
+        values: {
+          ...gridB.values,
+          [month]: to,
+        },
+      });
 
-    // log only if Grid B actually changed
-    if (from !== to) {
-      setAppliedChanges((prev) => [
-        { month, from, to, type: "applied" },
-        ...prev,
-      ]);
-    }
-  }
-
-  if (isLoading) return <div className="page">Loading…</div>;
-  if (error) return <div className="page">Error: {error}</div>;
-  if (!gridA || !gridB) return null;
+      // log only if Grid B actually changed
+      if (from !== to) {
+        setAppliedChanges((prev) => [
+          { month, from, to, type: "applied" },
+          ...prev,
+        ]);
+      }
+    },
+    [gridA, gridB],
+  );
 
   const pendingChanges: ChangeRow[] = MONTHS.flatMap((m) => {
     const a = gridA.values[m] ?? 0;
