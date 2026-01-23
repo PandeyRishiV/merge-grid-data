@@ -11,6 +11,7 @@
     "start": "concurrently \"npm --workspace=backend run dev\" \"npm --workspace=client run dev\""
   },
   "devDependencies": {
+    "@testing-library/user-event": "^14.6.1",
     "baseline-browser-mapping": "^2.9.15",
     "concurrently": "^9.2.1"
   }
