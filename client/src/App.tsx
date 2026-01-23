@@ -116,13 +116,15 @@ export default function App() {
     [gridA, gridB],
   );
 
-  const pendingChanges: ChangeRow[] = MONTHS.flatMap((m) => {
-    const a = gridA.values[m] ?? 0;
-    const b = gridB.values[m] ?? 0;
-    return a !== b
-      ? [{ month: m, from: b, to: a, type: "pending" as const }]
-      : [];
-  });
+  const pendingChanges: ChangeRow[] = useMemo(() => {
+    return MONTHS.map((m) => {
+      const a = gridA?.values[m] ?? 0;
+      const b = gridB?.values[m] ?? 0;
+      return a !== b
+        ? { month: m, from: b, to: a, type: "pending" as ChangeRow["type"] }
+        : null;
+    }).filter((c) => !!c);
+  }, [gridA, gridB]);
 
   const monthIndex = (m: Month) => MONTHS.indexOf(m);
 
