@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./App.css";
 import ChangesGrid, { type ChangeRow } from "./components/ChangesGrid";
 import Grid from "./components/Grid";
@@ -34,7 +34,7 @@ const API_BASE = "http://localhost:3000";
  * @returns A deep copy of the Row object
  */
 export function cloneRow(row: Row): Row {
-  return { id: row.id, name: row.name, values: { ...row.values } };
+  return structuredClone(row);
 }
 
 export default function App() {
@@ -45,8 +45,6 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
-
     async function load() {
       try {
         setIsLoading(true);
@@ -57,9 +55,7 @@ export default function App() {
           throw new Error(`Failed to fetch Grid`);
         }
 
-        const data: Row = (await res.json()) as Row;
-
-        if (cancelled) return;
+        const data: Row = await res.json();
 
         const valueCheck = Object.fromEntries(
           MONTHS.map((month) => [month, Number(data.values?.[month] ?? 0)]),
@@ -74,21 +70,15 @@ export default function App() {
         setGridA(row);
         setGridB(cloneRow(row));
       } catch (err) {
-        if (cancelled) return;
         setError(
           err instanceof Error ? err.message : "An unknown error occurred",
         );
       } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       }
     }
 
     load();
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   /**
@@ -96,7 +86,10 @@ export default function App() {
    * @param month
    * @param value
    */
-  function updateGridACell(month: Month, value: number) {
+  const updateGridACell = useCallback(function updateGridACell(
+    month: Month,
+    value: number,
+  ) {
     setGridA((prev) => {
       if (!prev) return prev;
 
@@ -104,59 +97,65 @@ export default function App() {
       values[month] = Number(value);
       return { ...prev, values };
     });
-  }
+  }, []);
 
   /**
    * Merge a month from Grid A to Grid B
    * @param month
    * @returns none
    */
-  function mergeMonth(month: Month) {
-    if (!gridA || !gridB) return;
+  const mergeMonth = useCallback(
+    function mergeMonth(month: Month) {
+      if (!gridA || !gridB) return;
 
-    const from = gridB.values[month] ?? 0;
-    const to = gridA.values[month] ?? 0;
+      const from = gridB.values[month] ?? 0;
+      const to = gridA.values[month] ?? 0;
 
-    setGridB({
-      ...gridB,
-      values: {
-        ...gridB.values,
-        [month]: to,
-      },
+      // update Grid B
+      setGridB({
+        ...gridB,
+        values: {
+          ...gridB.values,
+          [month]: to,
+        },
+      });
+
+      // log only if Grid B actually changed
+      if (from !== to) {
+        setAppliedChanges((prev) => [
+          { month, from, to, type: "applied" },
+          ...prev,
+        ]);
+      }
+    },
+    [gridA, gridB],
+  );
+
+  const pendingChanges: ChangeRow[] = useMemo(() => {
+    return MONTHS.map((m) => {
+      const a = gridA?.values[m] ?? 0;
+      const b = gridB?.values[m] ?? 0;
+      return a !== b
+        ? { month: m, from: b, to: a, type: "pending" as ChangeRow["type"] }
+        : null;
+    }).filter((c) => !!c);
+  }, [gridA, gridB]);
+
+  const monthIndex = (m: Month) => MONTHS.indexOf(m);
+
+  const changesToShow: ChangeRow[] = useMemo(() => {
+    return [...pendingChanges, ...appliedChanges].sort((a, b) => {
+      const mi = monthIndex(a.month) - monthIndex(b.month);
+      if (mi !== 0) return mi;
+
+      if (a.type === b.type) return 0;
+      return a.type === "pending" ? -1 : 1;
     });
-
-    if (from !== to) {
-      setAppliedChanges((prev) => [
-        { month, from, to, type: "applied" },
-        ...prev,
-      ]);
-    }
-  }
+  }, [pendingChanges, appliedChanges]);
 
   if (isLoading) return <div className="page">Loading…</div>;
   if (error) return <div className="page">Error: {error}</div>;
   if (!gridA || !gridB) return null;
-
-  const pendingChanges: ChangeRow[] = MONTHS.flatMap((m) => {
-    const a = gridA.values[m] ?? 0;
-    const b = gridB.values[m] ?? 0;
-    return a !== b
-      ? [{ month: m, from: b, to: a, type: "pending" as const }]
-      : [];
-  });
-
-  const monthIndex = (m: Month) => MONTHS.indexOf(m);
-
-  const changesToShow: ChangeRow[] = [
-    ...pendingChanges,
-    ...appliedChanges,
-  ].sort((a, b) => {
-    const mi = monthIndex(a.month) - monthIndex(b.month);
-    if (mi !== 0) return mi;
-
-    if (a.type === b.type) return 0;
-    return a.type === "pending" ? -1 : 1;
-  });
 
   return (
     <div className="page">

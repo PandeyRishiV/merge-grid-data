@@ -1,11 +1,13 @@
 import type { Month } from "../App";
 import "./ChangesGrid.css";
 
+type type = "pending" | "applied";
+
 export type ChangeRow = {
   month: Month;
   from: number; // Grid B
   to: number; // Grid A
-  type: "pending" | "applied";
+  type: type;
 };
 
 export default function ChangesGrid({

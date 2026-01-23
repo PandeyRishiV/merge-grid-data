@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { MONTHS, type Month, type Row } from "../App";
 import "./Grid.css";
 
@@ -10,13 +11,15 @@ export default function Grid({
   editable?: boolean;
   onEdit?: (month: Month, value: number) => void;
 }) {
-  const totals = MONTHS.reduce(
-    (acc, m) => {
-      acc[m] = row.values[m] ?? 0;
-      return acc;
-    },
-    {} as Record<(typeof MONTHS)[number], number>,
-  );
+  const totals = useMemo(() => {
+    return MONTHS.reduce(
+      (acc, m) => {
+        acc[m] = row.values[m] ?? 0;
+        return acc;
+      },
+      {} as Record<(typeof MONTHS)[number], number>,
+    );
+  }, [row]);
   return (
     <table className="grid">
       <thead>
