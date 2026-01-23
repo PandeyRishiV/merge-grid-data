@@ -35,3 +35,23 @@ beforeEach(() => {
 });
 
 afterEach(() => cleanup());
+
+function mockFetch(row: Row) {
+  vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+    ok: true,
+    json: async () => row,
+  } as Response);
+}
+
+describe("App", () => {
+  it("calls fetch on mount", async () => {
+    mockFetch(makeRow());
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(globalThis.fetch).toHaveBeenCalledWith(
+        "http://localhost:3000/row/row1",
+      );
+    });
+  });
