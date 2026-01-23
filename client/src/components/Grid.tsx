@@ -51,7 +51,7 @@ export default function Grid({
                     const next = Number(e.target.value);
                     onEdit?.(m, Number.isFinite(next) ? next : 0);
                   }}
-                  readOnly={!editable}
+                  disabled={!editable}
                 />
               </td>
               <td className="grid-td">{totals[m]}</td>
