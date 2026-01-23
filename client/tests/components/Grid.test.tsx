@@ -26,26 +26,26 @@ function makeRow(): Row {
   };
 }
 afterEach(() => cleanup());
-// describe("Grid", () => {
-//     it("renders title, months, and input values", () => {
-//         const row = makeRow();
-//         render(<Grid row={row} />);
+describe("Grid", () => {
+  it("renders title, months, and input values", () => {
+    const row = makeRow();
+    render(<Grid row={row} />);
 
-//         // title
-//         expect(screen.getByText("Product A")).toBeInTheDocument();
+    // title
+    expect(screen.getByText("Product A")).toBeInTheDocument();
 
-//         // months (vertical layout: month labels are in cells)
-//         expect(screen.getByText("Jan")).toBeInTheDocument();
-//         expect(screen.getByText("Dec")).toBeInTheDocument();
+    // months
+    expect(screen.getByText("Jan")).toBeInTheDocument();
+    expect(screen.getByText("Dec")).toBeInTheDocument();
 
-//         // inputs: 12 month inputs
-//         const inputs = screen.getAllByRole("spinbutton");
-//         expect(inputs).toHaveLength(12);
+    // inputs for each month
+    const inputs = screen.getAllByRole("spinbutton");
+    expect(inputs).toHaveLength(12);
 
-//         // spot check some values (inputs are strings)
-//         expect(inputs[0]).toHaveValue(10);
-//         expect(inputs[11]).toHaveValue(120);
-//     });
+    // random value check
+    expect(inputs[0]).toHaveValue(10);
+    expect(inputs[11]).toHaveValue(120);
+  });
 
 //     it("is read-only by default", async () => {
 //         const user = userEvent.setup();
