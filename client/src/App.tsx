@@ -76,7 +76,10 @@ export default function App() {
     load();
   }, []);
 
-  function updateGridACell(month: Month, value: number) {
+  const updateGridACell = useCallback(function updateGridACell(
+    month: Month,
+    value: number,
+  ) {
     setGridA((prev) => {
       if (!prev) return prev;
 
@@ -84,7 +87,7 @@ export default function App() {
       values[month] = Number(value);
       return { ...prev, values };
     });
-  }
+  }, []);
 
   function mergeMonth(month: Month) {
     if (!gridA || !gridB) return;
